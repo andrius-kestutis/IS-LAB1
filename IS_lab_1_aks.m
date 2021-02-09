@@ -55,17 +55,17 @@ metric_P4=apvalumas_roundness(P4); %roundness
 x1_mok=[hsv_value_A1 hsv_value_A2 hsv_value_A3 hsv_value_P1 hsv_value_P2];
 x2_mok=[metric_A1 metric_A2 metric_A3 metric_P1 metric_P2];
 % estimated features are stored in matrix P:
-P=[x1_mok;x2_mok];
+P_mok=[x1_mok;x2_mok];
 %Desired output vector
-Tikslas=[1;1;1;-1;-1]; %%%%%%%%%%%( Turi buti 1=obuolys, -1=kriause, sablone buvo klaida)
+Tikslas_mok=[1;1;1;-1;-1]; %%%%%%%%%%%( Turi buti 1=obuolys, -1=kriause, sablone buvo klaida)
 
 disp('3 obuoliai ir 2 kriauses nuskaitytos');
 disp('spalvos ');%disp(x1);
 disp('apvalumas ');%disp(x2);
 disp('+1=obuolys, -1=kriause');%disp((T'));
 %disp('bendrai');
-disp(P);
-disp((Tikslas')); %horizontaliam vaizdui transponuojame
+disp(P_mok);
+disp((Tikslas_mok')); %horizontaliam vaizdui transponuojame
 figure(1)
 plot(x1_mok,x2_mok,'d');xlabel('apvalumas');ylabel('spalva');title('spalva ir apvalumas');
 
@@ -76,9 +76,9 @@ w1 = randn(1);
 w2 = randn(1);
 b = randn(1);
 
-disp('1');disp(w1);
-disp('w2');disp(w2);
-disp('b');disp(b);
+disp('pradinis w1');disp(w1);
+disp('pradinis w2 ');disp(w2);
+disp('pradinis b');disp(b);
 
 % calculate wieghted sum with randomly generated parameters
 %%%%%%skaičiuojame svorines sumas - Haikino pradžia
@@ -90,7 +90,7 @@ if svor_suma_1 > 0  % output of the i-th perceptron
 else
 	out_1= -1;
 end
-klaid_1 = Tikslas(1) - out_1;% calculate the error
+klaid_1 = Tikslas_mok(1) - out_1;% calculate the error
 % repeat the same for the rest 4 inputs x1 and x2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 svor_suma_2= x1_mok(2) * w1 + x2_mok(2) * w2 + b;             %%
@@ -99,7 +99,7 @@ if svor_suma_2 > 0 % output of the i-th perceptron
 else
 	out_2= -1;
 end
-klaid_2 = Tikslas(2) - out_2;% calculate the error
+klaid_2 = Tikslas_mok(2) - out_2;% calculate the error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 svor_suma_3= x1_mok(3) * w1 + x2_mok(3) * w2 + b;             %%%
 if svor_suma_3 > 0 % output of the i-th perceptron
@@ -107,7 +107,7 @@ if svor_suma_3 > 0 % output of the i-th perceptron
 else
 	out_3= -1;
 end
-klaid_3 = Tikslas(3) - out_3;% calculate the error
+klaid_3 = Tikslas_mok(3) - out_3;% calculate the error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 svor_suma_4= x1_mok(4) * w1 + x2_mok(4) * w2 + b;             %%%%
 if svor_suma_4 > 0 % output of the i-th perceptron
@@ -115,7 +115,7 @@ if svor_suma_4 > 0 % output of the i-th perceptron
 else
 	out_4= -1;
 end
-klaid_4 = Tikslas(4) - out_4;% calculate the error
+klaid_4 = Tikslas_mok(4) - out_4;% calculate the error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 svor_suma_5= x1_mok(5) * w1 + x2_mok(5) * w2 + b;             %%%%%
 if svor_suma_5 > 0 % output of the i-th perceptron
@@ -123,9 +123,9 @@ if svor_suma_5 > 0 % output of the i-th perceptron
 else
 	out_5= -1;
 end
-klaid_5 = Tikslas(5) - out_5;% calculate the error
+klaid_5 = Tikslas_mok(5) - out_5;% calculate the error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% % % % % % % % % % 
-disp('svor_sumos');
+disp('svor sumos pradines');
 disp(svor_suma_1);
 disp(svor_suma_2);
 disp(svor_suma_3);
@@ -134,29 +134,76 @@ disp(svor_suma_5);
 
 klaida_bendra = abs(klaid_1) + abs(klaid_2) + abs(klaid_3) + abs(klaid_4) + abs(klaid_5);
 
-disp('bendra_klaida');
+disp('bendra klaida');
 disp(klaida_bendra);
 
+pat=1;   %pataisos koeficientas pseudorandom pradzioje
+zingsnis=0; %pradedame apmokinima
+
+disp('pataisa');disp(pat);
+disp('zingsnis');disp(zingsnis);
+disp('pradedam apmokinti');
 % write training algorithm
-while e ~= 0 % executes while the total error is not 0
-	% here should be your code of parameter update
-%   calculate output for current example
-% 
-%   calculate error for current example
-% 
-%   update parameters using current inputs ant current error
-% 	w1 = 
-%   w2 = 
-%   b = 
-% 
-%   Test how good are updated parameters (weights) on all examples used for training
-%   calculate outputs and errors for all 5 examples using current values of the parameter set {w1, w2, b}
-%   calculate 'svor_suma_1', 'svor_suma_2', 'svor_suma_3',... 'svor_suma_5'
-% 
-%   calculate 'y1', ..., 'y5'
-%     
-%   calculate 'e1', ... 'e5'
+while klaida_bendra ~= 0 % executes while the total error is not 0
+	zingsnis=zingsnis+1; 
     
+    % here should be your code of parameter update
+    %   calculate output for current example
+    %   calculate error for current example
+    %   update parameters using current inputs ant current error
+    % 	w1 = 
+    w1 = w1 + pat*klaid_1*x1_mok(1); %%% iteracijoje pridedam pataisele svor koef 1 nuo kiekvienos klaidos
+    w1 = w1 + pat*klaid_2*x1_mok(2);
+    w1 = w1 + pat*klaid_3*x1_mok(3);
+    w1 = w1 + pat*klaid_4*x1_mok(4);
+    w1 = w1 + pat*klaid_5*x1_mok(5);
+
+    %   w2 =
+    w2 = w2 + pat*klaid_1*x2_mok(1);%%% iteracijoje pridedam pataisele svor koef 2 nuo kiekvienos klaidos
+    w2 = w2 + pat*klaid_2*x2_mok(2);
+    w2 = w2 + pat*klaid_3*x2_mok(3);
+    w2 = w2 + pat*klaid_4*x2_mok(4);
+    w2 = w2 + pat*klaid_5*x2_mok(5);
+
+    %   b =
+    b = b + pat*klaid_1;   %% iteracijoje pridedam pataisele  b nuo kiekvienos klaidos
+    b = b + pat*klaid_2;
+    b = b + pat*klaid_3;
+    b = b + pat*klaid_4;
+    b = b + pat*klaid_5;
+
+
+    %   Test how good are updated parameters (weights) on all examples used for training:
+    %   calculate outputs and errors for all 5 examples using current values of the parameter set {w1, w2, b}
+    %   calculate 'v1', 'v2', 'v3',... 'v5'
+    svor_suma_1 = x1_mok(1) * w1 + x2_mok(1) * w2 + b;
+    svor_suma_2 = x1_mok(2) * w1 + x2_mok(2) * w2 + b;
+    svor_suma_3 = x1_mok(3) * w1 + x2_mok(3) * w2 + b;
+    svor_suma_4 = x1_mok(4) * w1 + x2_mok(4) * w2 + b;
+    svor_suma_5 = x1_mok(5) * w1 + x2_mok(5) * w2 + b;   
+    %   calculate 'y1', ..., 'y5'
+    out_1 = sign(svor_suma_1);
+    out_2 = sign(svor_suma_2);
+    out_3 = sign(svor_suma_3);
+    out_4 = sign(svor_suma_4);
+    out_5 = sign(svor_suma_5);
+    %     
+    %   calculate 'e1', ... 'e5'   %%%%%%%%% atnaujiname paklaidas
+    klaid_1 = Tikslas_mok(1) - out_1;
+    klaid_2 = Tikslas_mok(2) - out_2;
+    klaid_3 = Tikslas_mok(3) - out_3;
+    klaid_4 = Tikslas_mok(4) - out_4;
+    klaid_5 = Tikslas_mok(5) - out_5;
 	% calculate the total error for these 5 inputs 
-	e = abs(klaid_1) + abs(e2) + abs(e3) + abs(e4) + abs(e5);
+	klaida_bendra = abs(klaid_1) + abs(klaid_2) + abs(klaid_3) + abs(klaid_4) + abs(klaid_5);
 end
+
+disp('zingsniu atlikta');disp(zingsnis);  %%%%isvedam kas gavosi po apmokinimo
+disp('pataisa');disp(pat);
+disp('surastas w1');disp(w1);
+disp('surastas w2');disp(w2);
+disp('surastas b');disp(b);
+disp('bendra klaida');disp(klaida_bendra);
+%%%%% toliau testuosime kaip atpazysta
+
+
