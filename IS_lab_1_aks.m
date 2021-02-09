@@ -1,5 +1,5 @@
 %Classification using perceptron % obuolių ir kriaušių atskyrimas apmokytu perceptronu
-
+clc; clear; close all;
 %Reading apple images
 A1=imread('apple_04.jpg');
 A2=imread('apple_05.jpg');
@@ -62,6 +62,7 @@ hsv_value_P4=spalva_color(P4); %color
 metric_P4=apvalumas_roundness(P4); %roundness
 
 %selecting features(color, roundness, 3 apples and 2 pears)
+%------apmokinimui naudojame puse nuotrauku
 %A1,A2,A3,P1,P2
 %building matrix 2x5
 x1=[hsv_value_A1 hsv_value_A2 hsv_value_A3 hsv_value_P1 hsv_value_P2];
@@ -70,63 +71,71 @@ x2=[metric_A1 metric_A2 metric_A3 metric_P1 metric_P2];
 P=[x1;x2];
 
 %Desired output vector
-T=[1;-1;-1;1;-1];
+T=[1;1;1;-1;-1]; %%%%%%%%%%%(1=obuolys, -1=kriause, sablone buvo klaida)
 
-%% train single perceptron with two inputs and one output
+disp('3 obuoliai ir 2 kriauses nuskaitytos');
+disp('spalvos ');%disp(x1);
+disp('apvalumas ');%disp(x2);
+disp('+1=obuolys, -1=kriause');%disp((T'));
+%disp('bendrai');
+disp(P);
+disp((T'));
 
-% generate random initial values of w1, w2 and b
-w1 = randn(1);
-w2 = randn(1);
-b = randn(1);
-
-% calculate wieghted sum with randomly generated parameters
-%v1 = <...>; % write your code here
-% calculate current output of the perceptron 
-if v > 0
-	y = 1;
-else
-	y = -1;
-end
-% calculate the error
-e1 = T(1) - y;
-
-% repeat the same for the rest 4 inputs x1 and x2
-% calculate wieghted sum with randomly generated parameters
-% v2 = <...> ; % write your code here
-% calculate current output of the perceptron 
-if v > 0
-	y = 1;
-else
-	y = -1;
-end
-% calculate the error
-e2 = T(2) - y;
-
-% <...> write the code for another 3 inputs
-
-% calculate the total error for these 5 inputs 
-e = abs(e1) + abs(e2) + abs(e3) + abs(e4) + abs(e5);
-
-% write training algorithm
-while e ~= 0 % executes while the total error is not 0
-	% here should be your code of parameter update
-%   calculate output for current example
+% %% train single perceptron with two inputs and one output
 % 
-%   calculate error for current example
+% % generate random initial values of w1, w2 and b
+% w1 = randn(1);
+% w2 = randn(1);
+% b = randn(1);
 % 
-%   update parameters using current inputs ant current error
-% 	w1 = 
-%   w2 = 
-%   b = 
+% % calculate wieghted sum with randomly generated parameters
+% %v1 = <...>; % write your code here
+% % calculate current output of the perceptron 
+% if v > 0
+% 	y = 1;
+% else
+% 	y = -1;
+% end
+% % calculate the error
+% e1 = T(1) - y;
 % 
-%   Test how good are updated parameters (weights) on all examples used for training
-%   calculate outputs and errors for all 5 examples using current values of the parameter set {w1, w2, b}
-%   calculate 'v1', 'v2', 'v3',... 'v5'
+% % repeat the same for the rest 4 inputs x1 and x2
+% % calculate wieghted sum with randomly generated parameters
+% % v2 = <...> ; % write your code here
+% % calculate current output of the perceptron 
+% if v > 0
+% 	y = 1;
+% else
+% 	y = -1;
+% end
+% % calculate the error
+% e2 = T(2) - y;
 % 
-%   calculate 'y1', ..., 'y5'
+% % <...> write the code for another 3 inputs
+% 
+% % calculate the total error for these 5 inputs 
+% e = abs(e1) + abs(e2) + abs(e3) + abs(e4) + abs(e5);
+% 
+% % write training algorithm
+% while e ~= 0 % executes while the total error is not 0
+% 	% here should be your code of parameter update
+% %   calculate output for current example
+% % 
+% %   calculate error for current example
+% % 
+% %   update parameters using current inputs ant current error
+% % 	w1 = 
+% %   w2 = 
+% %   b = 
+% % 
+% %   Test how good are updated parameters (weights) on all examples used for training
+% %   calculate outputs and errors for all 5 examples using current values of the parameter set {w1, w2, b}
+% %   calculate 'v1', 'v2', 'v3',... 'v5'
+% % 
+% %   calculate 'y1', ..., 'y5'
+% %     
+% %   calculate 'e1', ... 'e5'
 %     
-%   calculate 'e1', ... 'e5'
-    
-	% calculate the total error for these 5 inputs 
-	e = abs(e1) + abs(e2) + abs(e3) + abs(e4) + abs(e5);
-end
+% 	% calculate the total error for these 5 inputs 
+% 	e = abs(e1) + abs(e2) + abs(e3) + abs(e4) + abs(e5);
+% end
