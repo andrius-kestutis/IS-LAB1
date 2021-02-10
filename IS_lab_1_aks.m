@@ -50,7 +50,7 @@ metric_P4=apvalumas_roundness(P4); %roundness
 
 %selecting features(color, roundness, 3 apples and 2 pears)
 %------apmokinimui naudojame puse nuotrauku 3 obuolius ir 2 kriauses
-%A1,A2,A3,P1,P2
+%---------------------mokinimi pasirinkome------------A1,A2,A3,P1,P2
 %building matrix 2x5
 x1_mok=[hsv_value_A1 hsv_value_A2 hsv_value_A3 hsv_value_P1 hsv_value_P2];
 x2_mok=[metric_A1 metric_A2 metric_A3 metric_P1 metric_P2];
@@ -68,6 +68,7 @@ disp(P_mok);
 disp((Tikslas_mok')); %horizontaliam vaizdui transponuojame
 figure(1)
 plot(x1_mok,x2_mok,'d');xlabel('apvalumas');ylabel('spalva');title('spalva ir apvalumas');
+hold on; %%% piešime ant to paties grafiko
 
 %%%%%% train single perceptron with two inputs and one output
 % generate random initial values of w1, w2 and b 
@@ -75,6 +76,10 @@ plot(x1_mok,x2_mok,'d');xlabel('apvalumas');ylabel('spalva');title('spalva ir ap
 w1 = randn(1);
 w2 = randn(1);
 b = randn(1);
+% w1=0.3714; %%%%%%%%%%%%%% uzfiksuojame kad nesokinetu pradiniai w1, w2 ir b
+% w2=-0.2256; 
+% b=1.1174 ;
+
 
 disp('pradinis w1');disp(w1);
 disp('pradinis w2 ');disp(w2);
@@ -125,19 +130,22 @@ else
 end
 klaid_5 = Tikslas_mok(5) - out_5;% calculate the error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% % % % % % % % % % 
-disp('svor sumos pradines');
-disp(svor_suma_1);
-disp(svor_suma_2);
-disp(svor_suma_3);
-disp(svor_suma_4);
-disp(svor_suma_5);
+% disp('svor sumos pradines');
+% disp(svor_suma_1);
+% disp(svor_suma_2);
+% disp(svor_suma_3);
+% disp(svor_suma_4);
+% disp(svor_suma_5);
 
 klaida_bendra = abs(klaid_1) + abs(klaid_2) + abs(klaid_3) + abs(klaid_4) + abs(klaid_5);
 
 disp('bendra klaida');
 disp(klaida_bendra);
 
-pat=1;   %pataisos koeficientas pseudorandom pradzioje
+%%%%%%%%%%%%%%%%%%%%%%uzfiksavus w1, w2, b pradinius ties random const, 
+%%%%%%%%%%%%%%%%%%%%%%didinant pataisa (pat) sparteja apsimokinimas, 
+%%%%%%%%%%%%%%%%%%%%%%%mazeja zingsniu skaicius paklaidai iki nulio sumazeti
+pat=0.1;   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%pataisos koeficientas pseudorandom pradzioje
 zingsnis=0; %pradedame apmokinima
 
 disp('pataisa');disp(pat);
@@ -204,6 +212,73 @@ disp('surastas w1');disp(w1);
 disp('surastas w2');disp(w2);
 disp('surastas b');disp(b);
 disp('bendra klaida');disp(klaida_bendra);
+disp(' ');
+disp('apmokinima baigeme, pradedame testavima');
 %%%%% toliau testuosime kaip atpazysta
 
+% mokymui buvo rinkinys: A1,A2,A3,P1,P2
+% testavimui liko nepanaudoti A4, A5, A6, A7, A8, A9 ir P3 su P4
+% building test matrix 2x7
+x1_test = [ hsv_value_A4 hsv_value_A5 hsv_value_A6 hsv_value_A7 hsv_value_A8 hsv_value_A9 hsv_value_P3 hsv_value_P4];
+x2_test = [    metric_A4   metric_A5    metric_A6    metric_A7     metric_A8  metric_A9    metric_P3   metric_P4];
+
+% estimated test features are stored in test matrix P:
+P_testinis = [x1_test; x2_test];
+% expected output vector:
+Tikslas_test = [1;1;1;1;1;1;-1;-1];
+%%%%%%%%%%%%%%%+1=obuolys, -1=kriause
+
+disp(P_testinis);
+disp((Tikslas_test')); %horizontaliam vaizdui transponuojame
+
+figure(1)
+plot(x1_test,x2_test,'x');xlabel('apvalumas');ylabel('spalva');title('spalva ir apvalumas x-testuojami romb-mokymas');
+hold off; %%% piešime ant to paties grafiko kaip pirmą
+
+% neuron values for the test input:
+skaic_test = [ 0; 0; 0; 0; 0; 0; 0; 0];
+
+% activation-fn values for the test input:
+ats_test = [ 0; 0; 0; 0; 0; 0; 0; 0];
+
+
+
+% produced errors vector for test input:
+atsakymas = [ 0; 0; 0; 0; 0; 0; 0; 0];
+
+    skaic_test(1) = x1_test(1) * w1 + x2_test(1) * w2 + b;
+    skaic_test(2) = x1_test(2) * w1 + x2_test(2) * w2 + b;
+    skaic_test(3) = x1_test(3) * w1 + x2_test(3) * w2 + b;
+    skaic_test(4) = x1_test(4) * w1 + x2_test(4) * w2 + b;
+    skaic_test(5) = x1_test(5) * w1 + x2_test(5) * w2 + b;
+    skaic_test(6) = x1_test(6) * w1 + x2_test(6) * w2 + b;
+    skaic_test(7) = x1_test(7) * w1 + x2_test(7) * w2 + b;
+    skaic_test(8) = x1_test(8) * w1 + x2_test(8) * w2 + b;
+
+    ats_test(1) = sign(skaic_test(1));
+    ats_test(2) = sign(skaic_test(2));
+    ats_test(3) = sign(skaic_test(3));
+    ats_test(4) = sign(skaic_test(4));
+    ats_test(5) = sign(skaic_test(5));
+    ats_test(6) = sign(skaic_test(6));
+    ats_test(7) = sign(skaic_test(7));
+    ats_test(8) = sign(skaic_test(8));
+
+    atsakymas(1) = Tikslas_test(1) - ats_test(1);
+    atsakymas(2) = Tikslas_test(2) - ats_test(2);
+    atsakymas(3) = Tikslas_test(3) - ats_test(3);
+    atsakymas(4) = Tikslas_test(4) - ats_test(4);
+    atsakymas(5) = Tikslas_test(5) - ats_test(5);
+    atsakymas(6) = Tikslas_test(6) - ats_test(6);
+    atsakymas(7) = Tikslas_test(7) - ats_test(7);
+    atsakymas(8) = Tikslas_test(8) - ats_test(8);
+
+
+disp('Testiniai duomenys');disp(P_testinis);
+disp('turi atpažinti');disp(Tikslas_test');
+disp('atpažino:');disp(ats_test');
+disp('paklaida');disp(atsakymas');
+
+disp('palaužymui galima apgauti įrašant į x1_mok ir į x2_mok obuoliu spalvas ir apvalumus į kriaušių pozicijas');
+disp('If paklaida=00000000 GOTO moodle execute(pažymėti laboratorinį atlikta)');
 
